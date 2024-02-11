@@ -1,0 +1,286 @@
+// Kreedz mapping fgd
+
+//#####################################################
+// Base Class
+//#####################################################
+@BaseClass = kzVersion 
+[
+	kz_fgd_version(integer) : "KZ FGD Version": 1
+]
+
+// Documentation/ Information about FGD
+@BaseClass = kzHelp [ kzhelp(string): "Documentation" : "https://github.com/G2Pavon/kz_fgd" ]
+
+// Engine stuff
+@BaseClass = kzAngles
+[
+	angles(string) : "Pitch Yaw Roll (Y Z X)" : "0 0 0"
+]
+
+@BaseClass = kzTargetname
+[
+	targetname(string): "Name"
+]
+
+@BaseClass = kzVHLT
+[
+	zhlt_lightflags(choices) : "VHLT Lightflags" : 0 =
+	[
+		0 : "Default"
+		1 : "Embedded Fix"
+		2 : "Opaque (blocks light)"
+		3 : "Opaque + Embedded fix"
+		6 : "Opaque + Concave Fix"
+	]
+	light_origin(string) : "Light Origin Target"
+	zhlt_noclip(choices) : "Pasable" : 0 =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+]
+
+// Trigger
+@BaseClass base(kzTarget, kzTargetname) = kzTrigger
+[
+    //
+    // Common properties for all kz_trigger entities:
+    //
+	killtarget(target_destination) : "Kill target"
+	netname(target_destination) : "Target Path"
+	master(string) : "Master" 
+	sounds(choices) : "Sound style" : 0 =
+	[
+		0 : "No Sound"
+	]
+	delay(string) : "Delay before trigger" : "0"
+	message(string) : "Message (set sound too!)"
+	zhlt_invisible(string): "invisible" :"yes"
+	spawnflags(flags) = 
+	[
+		1: "Monsters" : 0
+		2: "No Clients" : 0
+		4: "Pushables": 0
+	]
+]
+
+// Render
+@BaseClass = kzRenderFxChoices
+[
+	renderfx(choices) :"Render FX" : 0 =
+	[
+		0: "Normal"
+		1: "Slow Pulse"
+		2: "Fast Pulse"
+		3: "Slow Wide Pulse"
+		4: "Fast Wide Pulse"
+		9: "Slow Strobe"
+		10: "Fast Strobe"
+		11: "Faster Strobe"
+		12: "Slow Flicker"
+		13: "Fast Flicker"
+		5: "Slow Fade Away"
+		6: "Fast Fade Away"
+		7: "Slow Become Solid"
+		8: "Fast Become Solid"
+		14: "Constant Glow"
+		15: "Distort"
+		16: "Hologram (Distort + fade)"
+	]
+]
+
+@BaseClass base(kzRenderFxChoices) = kzRenderFields 
+[
+	rendermode(choices) : "Render Mode" : 0 =
+	[
+		0: "Normal"
+		1: "Color"
+		2: "Texture"
+		3: "Glow"
+		4: "Solid"
+		5: "Additive"
+	]
+	renderamt(integer) : "FX Amount (1 - 255)" : 255
+	rendercolor(color255) : "FX Color (R G B)" : "0 0 0"
+]
+
+// Sounds
+@BaseClass = kzSounds
+[
+	sounds(choices) : "Sounds" : 0 = 
+	[
+		0: "None"
+		1: "Big zap & Warmup"
+		2: "Access Denied"
+		3: "Access Granted"
+		4: "Quick Combolock"
+		5: "Power Deadbolt 1"
+		6: "Power Deadbolt 2"
+		7: "Plunger"
+		8: "Small zap"
+		9: "Keycard Sound"
+		10: "Buzz"
+		11: "Buzz Off"
+		14: "Lightswitch"
+	]
+]
+
+// Button
+@BaseClass = kzButtonFlags
+[
+	spawnflags(flags) =
+	[
+		1: "Don't move" : 1
+		32: "Toggle" : 0
+		64: "Sparks" : 0
+		256:"Touch Activates": 0
+	]
+]
+
+// Player Hull
+@BaseClass = kzPlayerHull1	
+[
+    onlystand(choices) : "Force Stand" : 0 =
+    [
+        0: "No"
+        1: "Yes"
+    ]
+]
+
+@BaseClass = kzPlayerHull3
+[
+    onlyduck(choices) : "Force Duck" : 0 =
+    [
+        0: "No"
+        1: "Yes"
+    ]
+]
+//===========================================================================================================
+
+
+
+//###########################################################################################################
+// Brush Entities
+//###########################################################################################################
+
+//----------------------
+// KZ Timercounter
+@SolidClass base(kzRenderFields, kzVHLT, kzSounds, kzButtonFlags, kzHelp) = kz_start_button : "KZ Start Button"
+[
+	targetname(string) : "Name" : "counter_start_button"
+	target(string) : "Target" :"counter_start"
+	master(string) : "Master" : "power" 
+	speed(decimal) : "Speed" : 5.0
+	wait(decimal) : "Delay before reset (-1 stay)" : 3.0
+	delay(decimal) : "Delay before trigger" : 0.0
+	_minlight(string) : "Minimum light level"
+]
+
+
+@SolidClass base(kzRenderFields, kzVHLT, kzSounds, kzButtonFlags, kzHelp) = kz_end_button : "KZ Stop Button" 
+[
+	targetname(string) : "Name" : "counter_stop_button"
+	target(string) : "Target" : "counter_off"
+	master(string) : "Master" : "stopsource" 
+	speed(decimal) : "Speed" : 5.0
+	wait(decimal) : "Delay before reset (-1 stay)" : 2.0
+	delay(decimal) : "Delay before trigger" : 0.0
+	_minlight(string) : "Minimum light level"
+]
+
+
+@SolidClass base(kzTargetname, kzTrigger, kzHelp) = kz_start_zone : "Time starts when enters the zone" 
+[
+	target(string) : "Target" : "counter_start_button"
+	master(string) : "Master" : "power" 
+	wait(decimal) : "Delay before reset" : 0.1
+	spawnflags(flags) =
+	[
+		256: "Touches activate" : 1
+	]
+]
+
+
+@SolidClass base(kzTargetname, kzTrigger, kzHelp) = kz_stop_zone : "Time ends when enters the zone" 
+[
+	target(string) : "Target" : "counter_stop_button"
+	master(string) : "Master" : "stopsource" 
+	wait(decimal) : "Delay before reset" : 0.2
+	spawnflags(flags) =
+	[
+		256: "Touches activate" : 1
+	]
+]
+
+//----------------------
+// Bhop
+@BaseClass base(kzTargetname, kzGlobal, kzSounds, kzHelp, kzVersion) = kzBhopBase
+[	
+    //
+    // Common properties for all Bhop entities:
+    //
+    
+    // Behavior properties related to the brush movement:
+    angles(string) : "Bhop move direction" : "0 0 0" : "Angles representing the direction of brush movement"
+    direction(choices) : "Bhop move direction, alternative to 'angles'" : 0 =
+    [
+        0: "Angles"
+        1: "Down -Z"
+        2: "Right +X"
+        3: "Left -X"
+        4: "Forward +Y"
+        5: "Backward -Y"
+        6: "Up +Z"
+    ]
+    speed(decimal) : "Speed" : 150.0 : "Speed at which the bhop brush moves"
+    wait(string) : "Delay before close" : "1" : "Time in seconds before the Bhop brush closes after activation. Use -1 to keep it open."
+    move(decimal) : "Move distance" : -1.0 : "Distance the Bhop brush will move when activated. Negative values extend movement."
+    delay(string) : "Delay before fire" : "0.1" : "Time in seconds before the Bhop brush fires after being activated"
+    
+    // kzSounds properties related to the brush movement:
+    movesnd(choices) : "Move Sound" : 0 = 
+    [
+        0: "No Sound"
+        1: "Servo (Sliding)"
+        2: "Pneumatic (Sliding)"
+        3: "Pneumatic (Rolling)"
+        4: "Vacuum"
+        5: "Power Hydraulic"
+        6: "Large Rollers"
+        7: "Track kzBhopBase"
+        8: "Snappy Metal kzBhopBase"
+        9: "Squeaky 1"
+        10: "Squeaky 2"
+    ]
+    stopsnd(choices) : "Stop Sound" : 0 = 
+    [
+        0: "No Sound"
+        1: "Clang with brake"
+        2: "Clang reverb"
+        3: "Ratchet Stop"
+        4: "Chunk"
+        5: "Light airbrake"
+        6: "Metal Slide Stop"
+        7: "Metal Lock Stop"
+        8: "Snappy Metal Stop"
+    ]
+    
+    // Misc properties:
+    killtarget(target_destination) : "KillTarget" : "" : "Entity to kill when this Bhop brush is activated"
+    target(target_destination) : "Target" : "" : "Entity to trigger when this Bhop brush is activated"
+    master(string) : "Master" : "" : "Master entity that controls this Bhop brush"
+    netname(string) : "Fire on Close" : "" : "Entity to trigger when this Bhop brush closes"
+    
+    // SpawnFlags
+    spawnflags(flags) =
+    [
+        1 : "Starts Open" : 0 : "Starts in its 'open' position"
+        4 : "Don't link" : 0 : "Restricts the bhop from being linked to another bhop with the same name"
+        8 : "Passable" : 0 : "Allows entities to pass through"
+        32 : "Toggle" : 0 : "Can be turned on and off by player or triggers"
+        256 : "Use Only" : 0 : "Opens only by using the 'use' key"
+    ]
+]
+
+@SolidClass base(kzBhopBase, kzPlayerHull1, kzPlayerHull3) = kz_bhop : "Bhop" []
+

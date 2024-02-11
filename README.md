@@ -10,10 +10,6 @@ Inspired in [REMEC](https://gitlab.com/merisanu.alex/remec) and [GOKZ Mapping-AP
 ---
 #### Requirements:
 
-[Vluzacn's Half-Life Tools](https://web.archive.org/web/20200306193505/http://forums.svencoop.com/forumdisplay.php/217-Vluzacn-s-Map-Compile-Tools)
-
-[REMEC](https://gitlab.com/merisanu.alex/remec)
-
 Python and [goldsrcmap](https://github.com/G2Pavon/goldsrcmap)
 
 

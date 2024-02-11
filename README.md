@@ -2,6 +2,8 @@
 
 WIP (Not tested in VHE/JACK)
 
+https://github.com/G2Pavon/kz_fgd/issues/1
+
 ---
 Inspired in [REMEC](https://gitlab.com/merisanu.alex/remec) and [GOKZ Mapping-API](https://github.com/KZGlobalTeam/gokz/wiki/Mapping-API)
 
